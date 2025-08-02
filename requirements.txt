@@ -1,0 +1,5 @@
+Flask
+cloudant
+requests
+python-dotenv
+gunicorn

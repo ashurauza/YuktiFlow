@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YUKTIFLOW-A Task Manager</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <!-- Header -->
+  <header class="bg-gradient-primary-to-secondary py-4 text-center shadow-lg mb-5">
+    <img src="logo.png" alt="YUKTIFLOW-A Logo" width="60" class="mb-2" />
+    <h1 class="display-4 fw-bold text-light">YUKTIFLOW-A Task Manager</h1>
+    <p class="lead text-white-50 mb-0">Flow into Productivity. Task Management, Empowered by Cloud.</p>
+  </header>
+
+  <main class="container">
+
+   <!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-message-container">
+      {% for category, message in messages %}
+        <div class="toast align-items-center text-bg-{{ 'danger' if category == 'error' else 'success' }} border-0 show"
+             role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">{{ message }}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+    <!-- Home Page -->
+    {% if page == 'home' %}
+    <section class="text-center py-5">
+      <h2 class="display-5 fw-bold mb-4">Organize your day, the smarter cloud way.</h2>
+      <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg px-5 me-3">Create Account</a>
+      <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg px-5">Login</a>
+    </section>
+    {% endif %}
+
+   {% if page == 'signin' %}
+<section class="signin-container mx-auto">
+  <h2 class="mb-4 text-center fw-bold">Create an Account</h2>
+  <form method="POST" action="{{ url_for('signin') }}">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" name="username" id="username" class="form-control" required autofocus />
+    </div>
+    <div class="mb-4">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" id="password" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success w-100">Sign Up</button>
+  </form>
+  <p class="mt-3 text-center text-muted">
+    Already have an account? <a href="{{ url_for('login') }}">Login here</a>.
+  </p>
+</section>
+{% endif %}
+   {% if page == 'login' %}
+<section class="login-container mx-auto">
+  <h2 class="mb-4 text-center fw-bold">Login</h2>
+  <form method="POST" action="{{ url_for('login') }}">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" name="username" id="username" class="form-control" required autofocus />
+    </div>
+    <div class="mb-4">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" id="password" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
+  <p class="mt-3 text-center text-muted">
+    New here? <a href="{{ url_for('signin') }}">Create an account</a>.
+  </p>
+</section>
+{% endif %}
+
+    <!-- Dashboard Page -->
+    {% if page == 'dashboard' %}
+    <section>
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h2 class="fw-bold">Hello, <span class="text-primary">{{ session.username }}</span>!</h2>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+          <a href="{{ url_for('clear_completed') }}" class="btn btn-outline-secondary">Clear Completed</a>
+        </div>
+      </div>
+
+      <!-- Add Task Form -->
+      <div class="card mb-5 shadow-sm">
+        <div class="card-body">
+          <h4 class="mb-3">Add New Task</h4>
+          <form method="POST" action="{{ url_for('add') }}" class="row gy-3 gx-2 align-items-end">
+            <div class="col-md-4">
+              <label for="task" class="form-label">Task Title</label>
+              <input type="text" class="form-control" id="task" name="task" required placeholder="Task title" />
+            </div>
+            <div class="col-md-4">
+              <label for="description" class="form-label">Description</label>
+              <input type="text" class="form-control" id="description" name="description" placeholder="Description (optional)" />
+            </div>
+            <div class="col-md-2">
+              <label for="priority" class="form-label">Priority</label>
+              <select name="priority" id="priority" class="form-select">
+                <option value="low" selected>Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="due_date" class="form-label">Due Date</label>
+              <input type="date" class="form-control" id="due_date" name="due_date" />
+            </div>
+            <div class="col-12 text-end">
+              <button type="submit" class="btn btn-success px-5">Add Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="mb-3 d-flex gap-3 flex-wrap align-items-center">
+        <strong>Sort by:</strong>
+        <a href="{{ url_for('dashboard', sort='priority') }}" class="btn btn-outline-primary btn-sm">Priority</a>
+        <a href="{{ url_for('dashboard', sort='duedate') }}" class="btn btn-outline-primary btn-sm">Due Date</a>
+        <a href="{{ url_for('dashboard', sort='completed') }}" class="btn btn-outline-primary btn-sm">Completion</a>
+        <a href="{{ url_for('dashboard', sort='created') }}" class="btn btn-outline-primary btn-sm">Created</a>
+      </div>
+
+      <!-- Task List -->
+      {% if tasks %}
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for task in tasks %}
+        {% set priority_class = 'priority-low' if task.priority == 'low' else 'priority-medium' if task.priority == 'medium' else 'priority-high' %}
+        {% set priority_badge = task.priority|capitalize %}
+        <div class="col">
+          <div class="card task-card shadow-sm border-0 {{ priority_class }}">
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
+              <div>
+                <h5 class="card-title mb-1 {% if task.completed %}text-decoration-line-through text-muted{% endif %}">{{ task.task }}</h5>
+                <p class="card-text text-muted mb-0 small">
+                  {% if task.description %}{{ task.description }}<br>{% endif %}
+                  Due: {{ task.due_date or "No deadline" }}
+                  <span class="badge bg-{{ 'success' if task.priority == 'low' else 'warning' if task.priority == 'medium' else 'danger' }} ms-2">{{ priority_badge }}</span>
+                  {% if task.completed %}
+                  <span class="badge bg-success ms-1">Completed</span>
+                  {% endif %}
+                </p>
+              </div>
+              <div class="d-flex gap-1 mt-3 mt-md-0">
+                {% if not task.completed %}
+                <a href="{{ url_for('complete', tid=task._id) }}" class="btn btn-success btn-sm" title="Mark Complete">
+                  <i class="bi bi-check-lg"></i>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('edit', tid=task._id) }}" class="btn btn-warning btn-sm" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{{ url_for('delete', tid=task._id) }}" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this task?');">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-muted fs-5 text-center mt-5">No tasks yet. Add your first task!</p>
+      {% endif %}
+    </section>
+    {% endif %}
+
+   {% if page == 'edit' %}
+<section class="edit-task-container mx-auto">
+  <h2 class="mb-4 text-center fw-bold">Edit Task</h2>
+  <form method="POST" action="{{ url_for('update', tid=doc._id) }}">
+    <div class="mb-3">
+      <label for="task" class="form-label">Task Title</label>
+      <input type="text" name="task" id="task" class="form-control" required value="{{ doc.task }}" />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <input type="text" name="description" id="description" class="form-control" value="{{ doc.description }}" />
+    </div>
+    <div class="mb-3">
+      <label for="priority" class="form-label">Priority</label>
+      <select name="priority" id="priority" class="form-select" required>
+        <option value="low" {% if doc.priority == 'low' %}selected{% endif %}>Low</option>
+        <option value="medium" {% if doc.priority == 'medium' %}selected{% endif %}>Medium</option>
+        <option value="high" {% if doc.priority == 'high' %}selected{% endif %}>High</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="due_date" class="form-label">Due Date</label>
+      <input type="date" name="due_date" id="due_date" class="form-control" value="{{ doc.due_date or '' }}" />
+    </div>
+    <div class="d-flex justify-content-between">
+      <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">&laquo; Back</a>
+      <button type="submit" class="btn btn-primary">Update Task</button>
+    </div>
+  </form>
+</section>
+{% endif %}
+  </main>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Initialize toasts
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.forEach(function(toastEl) {
+      new bootstrap.Toast(toastEl).show();
+    });
+  </script>
+</body>
+</html>

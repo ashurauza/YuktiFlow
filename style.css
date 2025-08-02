@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #e3ffe9 100%);
+  min-height: 100vh;
+}
+
+/* Task Card Base Style */
+.task-card {
+  border-left: 8px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.task-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(68, 89, 255, 0.15);
+}
+
+/* Priority Classes */
+.priority-low {
+  border-left-color: #28a745;
+} /* green */
+.priority-medium {
+  border-left-color: #fd7e14;
+} /* orange */
+.priority-high {
+  border-left-color: #dc3545;
+} /* red */
+
+/* Header Background */
+.bg-gradient-primary-to-secondary {
+  background: linear-gradient(90deg, #0093e9 0%, #80d0c7 100%);
+}
+
+/* Flash Message Styling */
+.flash-message-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem;
+  z-index: 1200;
+  max-width: 350px;
+}
+
+/* Form Containers */
+.signin-container,
+.login-container,
+.edit-task-container {
+  max-width: 400px;
+  margin: auto;
+  padding-bottom: 2rem;
+}
+.edit-task-container {
+  max-width: 600px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background: #121212;
+  color: #eee;
+}
+body.dark-mode .task-card {
+  background-color: #1e1e2f;
+  border-left-color: #6f42c1 !important;
+  box-shadow: 0 8px 32px rgba(111, 66, 193, 0.4);
+}
+body.dark-mode .bg-gradient-primary-to-secondary {
+  background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+}
+body.dark-mode header {
+  background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+}
+
+/* Responsive Fixes */
+@media (max-width: 576px) {
+  .task-card .card-body {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
