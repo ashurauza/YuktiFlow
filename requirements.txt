@@ -3,6 +3,7 @@ cloudant
 requests
 python-dotenv
 gunicorn
-streamlit
+
+
 
 
